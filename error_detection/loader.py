@@ -20,51 +20,43 @@ def encrypt_data(filename, keyfile, output_path):
     encrypt_output_file.close()
     os.system('./encode-crc32 encrypt_output.txt > {}encoded_data.txt'.format(output_path))
 
-
 # parsing arguments
-parser = argparse.ArgumentParser(description='''mode is an integer,
- 1:usb \n                                                                    
- 2:specific path \n                       
- 3:local folder\n''')
+parser = argparse.ArgumentParser(description='Program that encrypts & encodes json files')
 
-# exporting to an usb?              1
-#           to a specific path?     2
-#           to local folder?        3
-parser.add_argument(
-'mode',
-type=int,
-help='''mode is an integer,
- 1: usb, will return a list of usb devices and prompts for futher inputs. \n                                                                    
- 2: specific path, followed by -d <path> or --dir <path>                      
- 3: local folder\n''')
-
-parser.add_argument('-d', '--dir')
+# Manditory args
+parser.add_argument('key', help = 'key file used for encryption')
+parser.add_argument('json', help = 'json file to be encrypted')
+# Optional args
+parser.add_argument('-d', '--dir', help = 'directory path for the encoded output')
+parser.add_argument('-u', '--usb', help = 'will provide list of located usbs for selecting encoded output location', action='store_true')
 
 args = parser.parse_args()
-
 print(args)
 
+
+if(args.usb and (args.dir != None)):
+    print("Please choose export location as a directory OR a USB")
+    exit()
+
+
 # to usb
-if(args.mode == 1):
+elif(args.usb):
     mount_points = get_mount_points()
     print(mount_points)
     usb_choice = input("input the index of the usb array(starting from 0):")
     dir = mount_points[int(usb_choice)][1] + "/"
-
+    print('file exporting to "' + dir + '" ...')
 
 # to a path
-elif(args.mode ==2):
+elif(args.dir != None):
     #grabs the --dir argument.
     dir = args.dir
-    #error checking for not having a path at all.
-    if(dir == None):
-        print('''Failed to export,
-reason:  You have to specify a path to export using mode 2 !!!''')
-    else:
-        print('file exporting to "' + dir + '" ...')
+    
+    print('file exporting to "' + dir)
+
 # local folder
 else: 
     dir = './'
-
-print(dir)
-encrypt_data("test.json", "testing.key", dir)
+    print('No directory specified file exporting to "' + dir)
+    
+encrypt_data(args.json, args.key, dir)
