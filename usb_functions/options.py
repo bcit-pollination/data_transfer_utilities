@@ -52,7 +52,7 @@ if(args.mode == 1):
     mount_points = get_mount_points()
     print(mount_points)
     usb_choice = input("input the index of the usb array(starting from 0):")
-    print(mount_points[usb_choice])
+    print(mount_points[int(usb_choice)])
 
 
 # to a path
