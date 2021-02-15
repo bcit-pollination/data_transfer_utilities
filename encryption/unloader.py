@@ -3,8 +3,8 @@ import argparse
 from cryptography.fernet import Fernet
 from common import load_key, get_usb_devices, get_mount_points
 
-def decrypt(keyfile, output_path):
-    os.system('./decode-crc32 encoded_data.txt > decoded_data.txt')
+def decrypt(keyfile, input_path):
+    os.system('./decode-crc32 {}encoded_data.txt > decoded_data.txt'.format(input_path))
 
     with open('decoded_data.txt', 'rb') as file:
         data = file.read()
@@ -13,7 +13,7 @@ def decrypt(keyfile, output_path):
     f = Fernet(key)
     decrypted_msg = f.decrypt(data)
 
-    encrypt_output_file = open('{}data.json'.format(output_path), "wb")
+    encrypt_output_file = open('./data.json', "wb" )
     encrypt_output_file.write(decrypted_msg)
     encrypt_output_file.close()
 
@@ -21,10 +21,10 @@ def decrypt(keyfile, output_path):
 parser = argparse.ArgumentParser(description='Program that decodes & decrypts encoded files into data.json')
 
 # Manditory args
-parser.add_argument('key', help = 'key file used for encryption')
+parser.add_argument('key', help = 'key file used for decryption')
 # Optional args
-parser.add_argument('-d', '--dir', help = 'directory path for the encoded output')
-parser.add_argument('-u', '--usb', help = 'will provide list of located usbs for selecting encoded output location', action='store_true')
+parser.add_argument('-d', '--dir', help = 'directory path for the input file')
+parser.add_argument('-u', '--usb', help = 'will provide list of located usbs for selecting encoded input location', action='store_true')
 
 args = parser.parse_args()
 print(args)
