@@ -17,7 +17,7 @@ with open(filename, 'r') as fr:
 # os.system('./decode-crc32 encoded.txt > decoded.json')
 
 #encode
-os.system('./encode-crc32 test.txt > encoded2.txt')
+os.system('./encode-crc32 encrypt_output.txt > encoded2.txt')
 
 #decode
 os.system('./decode-crc32 encoded2.txt > decoded2.txt')
